@@ -1,137 +1,423 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GCSP E-Portfolio — Ishan Shrestha</title>
-  <meta name="description" content="Ishan Shrestha's GCSP E-Portfolio Home Page">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/feather-icons"></script>
-</head>
-<body class="bg-gradient-to-b from-indigo-50 to-white text-gray-900 font-sans">
+import React, { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { BookOpen, Globe, Users, Lightbulb, Rocket, Award, GraduationCap, Target, TrendingUp, Code, Search, ChevronDown } from 'lucide-react';
 
-  <!-- Header -->
-  <header class="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50">
-    <div class="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
-      <h1 class="text-2xl font-bold tracking-tight text-indigo-700">Ishan Shrestha</h1>
-      <nav class="space-x-6 text-sm font-medium">
-        <a href="#home" class="hover:text-indigo-600 transition">Home</a>
-        <a href="#about" class="hover:text-indigo-600 transition">About</a>
-        <a href="#global" class="hover:text-indigo-600 transition">Global Competency</a>
-        <a href="#entrepreneurship" class="hover:text-indigo-600 transition">Entrepreneurship</a>
-      </nav>
+export default function Portfolio() {
+  const [activeSection, setActiveSection] = useState('home');
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+
+      // Update active section based on scroll position
+      const sections = ['home', 'about', 'global', 'entrepreneurship', 'research'];
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 150 && rect.bottom >= 150) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offset = 80;
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({
+        top: elementPosition - offset,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/20">
+      {/* Sticky Header */}
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? 'bg-white/80 backdrop-blur-lg shadow-lg' : 'bg-white/60 backdrop-blur-sm'
+      }`}>
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            Ishan Shrestha
+          </h1>
+          <nav className="hidden md:flex gap-8">
+            {[
+              { id: 'home', label: 'Home' },
+              { id: 'about', label: 'About' },
+              { id: 'global', label: 'Global Competency' },
+              { id: 'entrepreneurship', label: 'Entrepreneurship' },
+              { id: 'research', label: 'Research/Project' }
+            ].map(item => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={`font-medium transition-all duration-300 hover:text-indigo-600 ${
+                  activeSection === item.id ? 'text-indigo-600' : 'text-gray-700'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section id="home" className="min-h-screen flex items-center justify-center px-6 pt-20">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-6">
+            <div className="inline-block">
+              <span className="px-4 py-2 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-200 rounded-full text-sm font-medium text-indigo-700">
+                Grand Challenges Scholars Program
+              </span>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+              <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                Welcome to My
+              </span>
+              <br />
+              <span className="text-gray-900">GCSP E-Portfolio</span>
+            </h1>
+            <p className="text-xl text-gray-600 leading-relaxed">
+              I am Ishan Shrestha, a Computer Science student at the University of Idaho, 
+              passionate about solving global challenges through technology and innovation.
+            </p>
+            <Button 
+              onClick={() => scrollToSection('about')}
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group"
+            >
+              Explore My Journey
+              <ChevronDown className="ml-2 w-5 h-5 group-hover:translate-y-1 transition-transform" />
+            </Button>
+          </div>
+
+          {/* Profile Card */}
+          <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-2xl hover:shadow-3xl transition-all duration-300 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-green-500/5" />
+            <CardContent className="relative p-8">
+              <div className="flex flex-col items-center text-center space-y-6">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full blur-xl opacity-30 animate-pulse" />
+                  <img
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop"
+                    alt="Ishan Shrestha"
+                    className="relative w-40 h-40 rounded-full object-cover border-4 border-white shadow-xl"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">Ishan Shrestha</h3>
+                  <p className="text-indigo-600 font-medium">Computer Science Student</p>
+                  <p className="text-gray-500 mt-1">University of Idaho</p>
+                </div>
+                <div className="flex gap-6 pt-4">
+                  {[
+                    { icon: BookOpen, label: 'Scholar' },
+                    { icon: Globe, label: 'Global' },
+                    { icon: Users, label: 'Leader' }
+                  ].map((item, index) => (
+                    <div key={index} className="flex flex-col items-center gap-2 group cursor-pointer">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <item.icon className="w-6 h-6 text-indigo-600" />
+                      </div>
+                      <span className="text-xs text-gray-600 font-medium">{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="py-24 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              About This <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Portfolio</span>
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-indigo-600 to-purple-600 mx-auto rounded-full" />
+          </div>
+          
+          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl">
+            <CardContent className="p-8 md:p-12">
+              <p className="text-lg text-gray-700 leading-relaxed">
+                This portfolio documents my transformative journey through the <strong className="text-indigo-600">Grand Challenges Scholars Program (GCSP)</strong>, 
+                showcasing my commitment to addressing critical global issues through interdisciplinary learning, 
+                creative problem-solving, and technological innovation.
+              </p>
+              <p className="text-lg text-gray-700 leading-relaxed mt-6">
+                Through GCSP, I am developing the skills and mindset necessary to tackle complex challenges 
+                that span cultures, disciplines, and borders — preparing myself to become a leader who can 
+                make meaningful contributions to society.
+              </p>
+              <div className="grid md:grid-cols-3 gap-6 mt-10">
+                {[
+                  { icon: Target, title: 'Purpose-Driven', desc: 'Focused on global impact' },
+                  { icon: Lightbulb, title: 'Innovative', desc: 'Creative problem solving' },
+                  { icon: TrendingUp, title: 'Growth-Oriented', desc: 'Continuous learning' }
+                ].map((item, index) => (
+                  <div key={index} className="flex flex-col items-center text-center p-4 rounded-xl bg-gradient-to-br from-indigo-50 to-purple-50 hover:shadow-lg transition-all duration-300">
+                    <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center mb-4 shadow-md">
+                      <item.icon className="w-7 h-7 text-indigo-600" />
+                    </div>
+                    <h4 className="font-bold text-gray-900 mb-2">{item.title}</h4>
+                    <p className="text-sm text-gray-600">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Global Competency Section */}
+      <section id="global" className="py-24 px-6 bg-gradient-to-br from-indigo-50/50 to-purple-50/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Global / Cultural <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Competency</span>
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-indigo-600 to-purple-600 mx-auto rounded-full mb-6" />
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Broadening my worldview and enhancing collaboration skills in multicultural contexts through 
+              immersive experiences and meaningful engagement with diverse communities.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                title: 'Spanish Language Courses',
+                desc: 'Enroll in Spanish language courses to enhance cross-cultural communication',
+                image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=400&fit=crop',
+                icon: BookOpen
+              },
+              {
+                title: 'International Festivals',
+                desc: 'Attend international cultural festivals to experience diverse traditions',
+                image: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=600&h=400&fit=crop',
+                icon: Globe
+              },
+              {
+                title: 'Refugee Support',
+                desc: 'Volunteer with refugee support groups to give back to the community',
+                image: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&h=400&fit=crop',
+                icon: Users
+              },
+              {
+                title: 'Friendship Family Program',
+                desc: 'Join the International Friendship Family Program for cultural exchange',
+                image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop',
+                icon: Award
+              }
+            ].map((project, index) => (
+              <Card key={index} className="group overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 bg-white">
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={project.image} 
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-4 left-4">
+                    <div className="w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                      <project.icon className="w-6 h-6 text-indigo-600" />
+                    </div>
+                  </div>
+                </div>
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-lg text-gray-900 mb-2">{project.title}</h3>
+                  <p className="text-gray-600 text-sm">{project.desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Entrepreneurship Section */}
+      <section id="entrepreneurship" className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Entrepreneurship, Innovation, <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">& Viable Business</span>
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-indigo-600 to-purple-600 mx-auto rounded-full mb-6" />
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Developing entrepreneurial thinking and creative innovation skills through technology-focused 
+              programs and hands-on venture development experiences.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                title: 'Vandal Startup Incubator',
+                desc: 'Join University Startup Incubator to develop entrepreneurial skills',
+                image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop',
+                icon: Rocket
+              },
+              {
+                title: 'New Venture Discovery',
+                desc: 'Take ENTR 4140: New Venture Discovery course for business fundamentals',
+                image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop',
+                icon: GraduationCap
+              },
+              {
+                title: 'Entrepreneurship Certification',
+                desc: 'Complete Online Entrepreneurship Certification through Coursera',
+                image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop',
+                icon: Award
+              },
+              {
+                title: 'Idaho Entrepreneurs Program',
+                desc: 'Participate in Idaho Entrepreneurs Program for real-world experience',
+                image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop',
+                icon: TrendingUp
+              }
+            ].map((project, index) => (
+              <Card key={index} className="group overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 bg-white">
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={project.image} 
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-4 left-4">
+                    <div className="w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                      <project.icon className="w-6 h-6 text-purple-600" />
+                    </div>
+                  </div>
+                </div>
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-lg text-gray-900 mb-2">{project.title}</h3>
+                  <p className="text-gray-600 text-sm">{project.desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Research Section */}
+      <section id="research" className="py-24 px-6 bg-gradient-to-br from-indigo-50/50 to-purple-50/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Research / <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Project</span>
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-indigo-600 to-purple-600 mx-auto rounded-full mb-6" />
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Technical research and development focused on advancing personalized learning through 
+              intelligent AI systems and innovative educational technology.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* AI Agent Development */}
+            <Card className="group overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-300 bg-white">
+              <div className="relative h-64 overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop"
+                  alt="AI Agent Development"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                <div className="absolute bottom-6 left-6">
+                  <div className="w-16 h-16 rounded-2xl bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                    <Code className="w-8 h-8 text-indigo-600" />
+                  </div>
+                </div>
+              </div>
+              <CardContent className="p-8">
+                <h3 className="font-bold text-2xl text-gray-900 mb-4">AI Agent Development</h3>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  Building an intelligent learning assistant that helps students understand programming 
+                  concepts through personalized guidance and adaptive feedback.
+                </p>
+                <p className="text-gray-600 text-sm mb-4">
+                  This project aligns with the Grand Challenge of <strong className="text-indigo-600">Advancing Personalized Learning</strong>, 
+                  utilizing cutting-edge AI to democratize computer science education and make it accessible to learners 
+                  with diverse backgrounds and learning styles.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {['Machine Learning', 'Natural Language Processing', 'Educational Technology', 'Python'].map((tag, index) => (
+                    <span key={index} className="px-3 py-1 bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 text-xs font-medium rounded-full">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Research and Planning */}
+            <Card className="group overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-300 bg-white">
+              <div className="relative h-64 overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop"
+                  alt="Research and Planning"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                <div className="absolute bottom-6 left-6">
+                  <div className="w-16 h-16 rounded-2xl bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                    <Search className="w-8 h-8 text-purple-600" />
+                  </div>
+                </div>
+              </div>
+              <CardContent className="p-8">
+                <h3 className="font-bold text-2xl text-gray-900 mb-4">Research & Planning</h3>
+                <p className="text-gray-700 leading-relaxed mb-6">
+                  Comprehensive documentation of the end-to-end research workflow, from identifying user needs 
+                  to final product evaluation.
+                </p>
+                <div className="space-y-3">
+                  {[
+                    'User Need Identification & Analysis',
+                    'Algorithm Design & Development',
+                    'Rapid Prototyping & Testing',
+                    'Evaluation & Iteration'
+                  ].map((step, index) => (
+                    <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-indigo-50 to-purple-50">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                        {index + 1}
+                      </div>
+                      <span className="text-gray-700 font-medium text-sm">{step}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gradient-to-r from-indigo-900 to-purple-900 text-white py-12 px-6">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="mb-6">
+            <h3 className="text-2xl font-bold mb-2">Ishan Shrestha</h3>
+            <p className="text-indigo-200">Grand Challenges Scholars Program</p>
+          </div>
+          <div className="w-16 h-1 bg-white/30 mx-auto rounded-full mb-6" />
+          <p className="text-indigo-200 text-sm">
+            © 2025 Ishan Shrestha — University of Idaho
+          </p>
+        </div>
+      </footer>
     </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section id="home" class="relative flex flex-col md:flex-row items-center justify-between max-w-5xl mx-auto px-6 py-20">
-    <!-- Left -->
-    <div class="flex-1 mb-10 md:mb-0">
-      <h2 class="text-4xl md:text-5xl font-extrabold text-indigo-700 mb-4">Welcome to My GCSP E-Portfolio</h2>
-      <p class="text-gray-700 text-lg mb-6">
-        I am <strong>Ishan Shrestha</strong>, a <strong>Computer Science</strong> student at the University of Idaho. 
-        Through the Grand Challenges Scholars Program, I aim to apply engineering, leadership, and interdisciplinary thinking to solve global challenges.
-      </p>
-      <a href="#about" class="inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-700 transition">
-        Explore My Journey
-      </a>
-    </div>
-
-    <!-- Right Profile Card -->
-    <div class="w-60 md:w-72 bg-white rounded-3xl shadow-xl p-6 flex flex-col items-center text-center hover:scale-105 transform transition">
-      <div class="w-32 h-32 rounded-full overflow-hidden mb-4 border-4 border-indigo-200">
-        <img src="ishan.jpeg" alt="Ishan Shrestha Avatar" class="w-full h-full object-cover">
-      </div>
-      <h3 class="font-bold text-xl text-indigo-700 mb-2">Ishan Shrestha</h3>
-      <p class="text-gray-600 mb-3">Computer Science Student | University of Idaho</p>
-      <div class="flex gap-3 text-gray-400">
-        <i data-feather="book-open"></i>
-        <i data-feather="globe"></i>
-        <i data-feather="users"></i>
-      </div>
-    </div>
-  </section>
-
-  <!-- About Section -->
-  <section id="about" class="max-w-4xl mx-auto px-6 py-16 bg-white rounded-3xl shadow-lg mb-12">
-    <h2 class="text-3xl font-bold text-indigo-700 mb-6">About This Portfolio</h2>
-    <p class="text-gray-700 mb-4">
-      This e-portfolio documents my journey through the <strong>Grand Challenges Scholars Program (GCSP)</strong>. 
-      Here, you will find reflections on my competencies, examples of my projects, and highlights of my capstone work.
-    </p>
-    <p class="text-gray-700">
-      My goal is to showcase not only my technical skills but also my ability to collaborate across disciplines, think critically, and approach problems with creativity and global awareness.
-    </p>
-  </section>
-
-  <!-- Global/Cultural Competency Section -->
-  <section id="global" class="max-w-4xl mx-auto px-6 py-16 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-3xl shadow-lg mb-12">
-    <h2 class="text-3xl font-bold text-indigo-700 mb-6">Global/Cultural Competency</h2>
-    <p class="text-gray-700 mb-6">
-      To develop my global and cultural competency, I plan to immerse myself in diverse experiences that broaden my worldview and enhance my ability to work effectively in multicultural settings. This includes language learning, cultural immersion, and community engagement. These steps will help me address global challenges with sensitivity to cultural nuances.
-    </p>
-    <div class="grid md:grid-cols-2 gap-8">
-      <div class="bg-white rounded-2xl p-6 shadow-md">
-        <img src="language_class.jpg" alt="Language Learning Class" class="w-full h-48 object-cover rounded-lg mb-4">
-        <h3 class="font-semibold text-lg text-indigo-700 mb-2">Enroll in Spanish Language Courses</h3>
-        <p class="text-gray-600">Starting next semester, I'll take introductory Spanish classes at the University of Idaho to communicate better in diverse teams. This will prepare me for potential collaborations in Latin American tech projects.</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-md">
-        <img src="cultural_festival.jpg" alt="International Cultural Festival" class="w-full h-48 object-cover rounded-lg mb-4">
-        <h3 class="font-semibold text-lg text-indigo-700 mb-2">Attend Global Cultural Festivals</h3>
-        <p class="text-gray-600">I'll participate in events like the Moscow International Festival, capturing moments of dance and cuisine from around the world to build empathy and cultural appreciation.</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-md">
-        <img src="volunteer_diversity.jpg" alt="Volunteering with Diverse Communities" class="w-full h-48 object-cover rounded-lg mb-4">
-        <h3 class="font-semibold text-lg text-indigo-700 mb-2">Volunteer with Refugee Support Groups</h3>
-        <p class="text-gray-600">Through local NGOs, I'll volunteer to assist immigrant families, learning about their stories and challenges to foster inclusive problem-solving in engineering.</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-md">
-        <img src="friendship_program.jpg" alt="International Friendship Program" class="w-full h-48 object-cover rounded-lg mb-4">
-        <h3 class="font-semibold text-lg text-indigo-700 mb-2">Join International Friendship Family Program</h3>
-        <p class="text-gray-600">I'll participate in the University of Idaho's International Friendship Family Program, pairing with an international student to exchange cultural experiences and build cross-cultural friendships.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Entrepreneurship/Innovation/Viable Business Section -->
-  <section id="entrepreneurship" class="max-w-4xl mx-auto px-6 py-16 bg-gradient-to-r from-green-50 to-emerald-50 rounded-3xl shadow-lg mb-12">
-    <h2 class="text-3xl font-bold text-indigo-700 mb-6">Entrepreneurship/Innovation/Viable Business</h2>
-    <p class="text-gray-700 mb-6">
-      My plan for developing entrepreneurship skills involves hands-on experiences in ideation, prototyping, and pitching viable business concepts. As a CS student, I'll focus on tech-driven innovations that align with grand challenges, such as sustainable software solutions.
-    </p>
-    <div class="grid md:grid-cols-2 gap-8">
-      <div class="bg-white rounded-2xl p-6 shadow-md">
-        <img src="entrepreneurship_workshop.jpg" alt="Entrepreneurship Workshop" class="w-full h-48 object-cover rounded-lg mb-4">
-        <h3 class="font-semibold text-lg text-indigo-700 mb-2">Join University Startup Incubator</h3>
-        <p class="text-gray-600">I'll enroll in the Vandal Startup program this year, attending workshops on business modeling to turn my app ideas into prototypes.</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-md">
-        <img src="new_venture_course.jpg" alt="New Venture Discovery Class" class="w-full h-48 object-cover rounded-lg mb-4">
-        <h3 class="font-semibold text-lg text-indigo-700 mb-2">Enroll in ENTR 4140: New Venture Discovery</h3>
-        <p class="text-gray-600">I'll take this course to learn the process of identifying and validating startup ideas, applying it to a tech innovation in sustainability.</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-md">
-        <img src="innovation_course.jpg" alt="Online Innovation Course" class="w-full h-48 object-cover rounded-lg mb-4">
-        <h3 class="font-semibold text-lg text-indigo-700 mb-2">Complete Online Entrepreneurship Certification</h3>
-        <p class="text-gray-600">Through Coursera's "Entrepreneurship" specialization, I'll learn lean startup methods and apply them to a personal project over the next six months.</p>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-md">
-        <img src="idaho_entrepreneurs.jpg" alt="Idaho Entrepreneurs Program" class="w-full h-48 object-cover rounded-lg mb-4">
-        <h3 class="font-semibold text-lg text-indigo-700 mb-2">Participate in Idaho Entrepreneurs Program</h3>
-        <p class="text-gray-600">I'll join this program offering academic credit and hands-on entrepreneurial training tailored for U of I students, focusing on launching viable ventures.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="border-t py-6 bg-white text-center text-gray-500 text-sm">
-    © 2025 Ishan Shrestha — Grand Challenges Scholars Program
-  </footer>
-
-  <script>
-    // Activate Feather Icons
-    feather.replace()
-  </script>
-</body>
-</html>
+  );
+}
